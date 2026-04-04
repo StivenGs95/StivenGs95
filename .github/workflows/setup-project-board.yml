@@ -1,0 +1,263 @@
+name: Configurar Tablero de Proyecto por Sprints
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_number:
+        description: 'Número del GitHub Project a poblar (ej: 1)'
+        required: true
+        type: number
+
+permissions:
+  issues: write
+  contents: read
+  repository-projects: write
+
+jobs:
+  create-labels:
+    name: Crear etiquetas de sprint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sprint 0 – Iniciación
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              { name: 'sprint-0', color: '6e40c9', description: 'Sprint 0 – Iniciación y Configuración' },
+              { name: 'sprint-1', color: '0075ca', description: 'Sprint 1 – Investigación y Diseño' },
+              { name: 'sprint-2', color: '008672', description: 'Sprint 2 – Definición y Planificación' },
+              { name: 'sprint-3', color: 'e4e669', description: 'Sprint 3 – Desarrollo del MVP' },
+              { name: 'sprint-4', color: 'e11d48', description: 'Sprint 4 – Validación y Entrega' },
+              { name: 'tipo: historia', color: 'bfd4f2', description: 'Historia de usuario' },
+              { name: 'tipo: tarea', color: 'd4c5f9', description: 'Tarea técnica' },
+              { name: 'tipo: investigación', color: 'fef2c0', description: 'Tarea de investigación' },
+              { name: 'tipo: documentación', color: 'cfd3d7', description: 'Documentación' },
+              { name: 'prioridad: alta', color: 'b60205', description: 'Prioridad alta' },
+              { name: 'prioridad: media', color: 'fbca04', description: 'Prioridad media' },
+              { name: 'prioridad: baja', color: '0e8a16', description: 'Prioridad baja' },
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description,
+                });
+                console.log(`Etiqueta creada: ${label.name}`);
+              } catch (e) {
+                if (e.status === 422) {
+                  console.log(`Etiqueta ya existe: ${label.name}`);
+                } else {
+                  throw e;
+                }
+              }
+            }
+
+  create-issues:
+    name: Crear issues por sprint
+    runs-on: ubuntu-latest
+    needs: create-labels
+    outputs:
+      issue_ids: ${{ steps.create.outputs.issue_ids }}
+    steps:
+      - name: Crear issues de todos los sprints
+        id: create
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sprints = [
+              {
+                sprint: 'sprint-0',
+                issues: [
+                  {
+                    title: '[S0] Selección de línea de proyecto y descripción general',
+                    body: `## Historia de usuario\nComo equipo, queremos definir y documentar la línea de proyecto seleccionada con su descripción general.\n\n## Criterios de aceptación\n- [ ] Línea de proyecto elegida con justificación.\n- [ ] Descripción general del problema a resolver.\n- [ ] Alcance preliminar definido.\n\n**Sprint:** Sprint 0 – Iniciación y Configuración`,
+                    labels: ['sprint-0', 'tipo: documentación', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S0] Configuración del repositorio y flujo Git',
+                    body: `## Tarea técnica\nConfigurar el repositorio con ramas, protecciones y convenciones de commits.\n\n## Criterios de aceptación\n- [ ] Rama \`main\` protegida.\n- [ ] Ramas \`develop\` y \`feature/*\` configuradas.\n- [ ] README inicial con descripción del proyecto.\n- [ ] GitHub Project vinculado al repositorio.\n\n**Sprint:** Sprint 0 – Iniciación y Configuración`,
+                    labels: ['sprint-0', 'tipo: tarea', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S0] Tablero de gestión de proyecto por sprints (GitHub Projects)',
+                    body: `## Tarea técnica\nConfigurar el tablero GitHub Projects con columnas y etiquetas por sprint/fase ágil.\n\n## Criterios de aceptación\n- [ ] Tablero creado con columnas: Backlog, Sprint Activo, En Progreso, Revisión, Hecho.\n- [ ] Etiquetas por sprint configuradas (sprint-0 al sprint-4).\n- [ ] Issues creados y asignados a sus sprints correspondientes.\n- [ ] Evidencia del tablero incluida en la documentación APA.\n\n**Sprint:** Sprint 0 – Iniciación y Configuración\n\n> Entregable #3 del curso.`,
+                    labels: ['sprint-0', 'tipo: tarea', 'prioridad: alta'],
+                  },
+                ],
+              },
+              {
+                sprint: 'sprint-1',
+                issues: [
+                  {
+                    title: '[S1] Mapa mental del CVDS aplicado al proyecto',
+                    body: `## Tarea de investigación\nElaborar un mapa mental que muestre el Ciclo de Vida del Desarrollo de Software aplicado al proyecto.\n\n## Criterios de aceptación\n- [ ] Mapa mental incluye todas las fases del CVDS.\n- [ ] Cada fase está relacionada con actividades concretas del proyecto.\n- [ ] Herramienta utilizada documentada (MindMeister, XMind, etc.).\n- [ ] Exportado en formato de imagen de alta resolución.\n\n**Sprint:** Sprint 1 – Investigación y Diseño`,
+                    labels: ['sprint-1', 'tipo: investigación', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S1] Investigación con usuarios – Entrevistas',
+                    body: `## Historia de usuario\nComo diseñador UX, quiero realizar entrevistas a usuarios potenciales para validar el problema.\n\n## Criterios de aceptación\n- [ ] Mínimo 3 entrevistas realizadas y documentadas.\n- [ ] Guía de entrevista definida.\n- [ ] Insights clave identificados.\n- [ ] Resultados sintetizados bajo normas APA.\n\n**Sprint:** Sprint 1 – Investigación y Diseño`,
+                    labels: ['sprint-1', 'tipo: investigación', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S1] User Persona y POV (Design Thinking)',
+                    body: `## Tarea de investigación\nDefinir el User Persona y el Point of View (POV) del proyecto usando Design Thinking.\n\n## Criterios de aceptación\n- [ ] Al menos 1 User Persona definido con datos demográficos, motivaciones y frustraciones.\n- [ ] POV redactado correctamente: [Usuario] necesita [necesidad] porque [insight].\n- [ ] Artefactos incluidos en el documento APA.\n\n**Sprint:** Sprint 1 – Investigación y Diseño`,
+                    labels: ['sprint-1', 'tipo: investigación', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S1] Customer Journey Map y User Flow / User Map',
+                    body: `## Historia de usuario\nComo equipo de diseño, queremos mapear la experiencia del usuario desde el primer contacto hasta el objetivo final.\n\n## Criterios de aceptación\n- [ ] Customer Journey Map con etapas, emociones y puntos de contacto.\n- [ ] User Flow que muestra el recorrido dentro de la solución digital.\n- [ ] User Map que evidencia el contexto y el ecosistema del usuario.\n- [ ] Archivos exportados e incluidos en el documento.\n\n**Sprint:** Sprint 1 – Investigación y Diseño`,
+                    labels: ['sprint-1', 'tipo: investigación', 'prioridad: alta'],
+                  },
+                ],
+              },
+              {
+                sprint: 'sprint-2',
+                issues: [
+                  {
+                    title: '[S2] Mapa de stakeholders',
+                    body: `## Tarea de análisis\nIdentificar y clasificar todos los stakeholders del proyecto según su influencia e interés.\n\n## Criterios de aceptación\n- [ ] Matriz de stakeholders (poder vs. interés) elaborada.\n- [ ] Al menos 5 stakeholders identificados con su rol.\n- [ ] Estrategia de comunicación por stakeholder definida.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
+                    labels: ['sprint-2', 'tipo: documentación', 'prioridad: media'],
+                  },
+                  {
+                    title: '[S2] Definición del alcance del MVP',
+                    body: `## Historia de usuario\nComo Product Owner, quiero definir el alcance mínimo del producto para la primera entrega de valor.\n\n## Criterios de aceptación\n- [ ] Lista de funcionalidades IN/OUT del MVP.\n- [ ] MVP justificado en función de los hallazgos de investigación.\n- [ ] Criterio de éxito del MVP definido.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
+                    labels: ['sprint-2', 'tipo: documentación', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S2] ERS – Requisitos funcionales y no funcionales',
+                    body: `## Documento de Especificación de Requisitos de Software\nRedactar el documento ERS que incluya requisitos funcionales y no funcionales del sistema.\n\n## Criterios de aceptación\n- [ ] Requisitos funcionales listados con ID, descripción y prioridad.\n- [ ] Requisitos no funcionales (rendimiento, seguridad, usabilidad) documentados.\n- [ ] Justificación de la metodología de desarrollo seleccionada.\n- [ ] Formato APA 7ª edición aplicado.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
+                    labels: ['sprint-2', 'tipo: documentación', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S2] Historias de usuario del MVP con criterios de aceptación',
+                    body: `## Tarea de planificación\nRedactar las historias de usuario del MVP siguiendo el formato estándar con criterios de aceptación.\n\n## Criterios de aceptación\n- [ ] Mínimo 5 historias de usuario escritas: Como [rol] quiero [acción] para [beneficio].\n- [ ] Cada historia tiene criterios de aceptación claros y verificables.\n- [ ] Historias priorizadas en el backlog.\n- [ ] Story points estimados.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
+                    labels: ['sprint-2', 'tipo: historia', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S2] Diagrama de flujo de la solución web',
+                    body: `## Tarea de diseño\nElaborar el diagrama de flujo que represente el funcionamiento de la solución web.\n\n## Criterios de aceptación\n- [ ] Diagrama de flujo con todos los procesos principales del sistema.\n- [ ] Incluye decisiones, entradas y salidas.\n- [ ] Herramienta utilizada (draw.io, Lucidchart, etc.) documentada.\n- [ ] Exportado en alta resolución e incluido en el ERS.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
+                    labels: ['sprint-2', 'tipo: tarea', 'prioridad: media'],
+                  },
+                ],
+              },
+              {
+                sprint: 'sprint-3',
+                issues: [
+                  {
+                    title: '[S3] Implementación de funcionalidades core del MVP',
+                    body: `## Historia de usuario\nComo desarrollador, quiero implementar las funcionalidades core definidas en el MVP para entregar valor al usuario.\n\n## Criterios de aceptación\n- [ ] Funcionalidades del MVP implementadas según historias de usuario.\n- [ ] Código revisado y en rama \`develop\`.\n- [ ] Tests unitarios básicos escritos.\n- [ ] Sin deuda técnica crítica.\n\n**Sprint:** Sprint 3 – Desarrollo del MVP`,
+                    labels: ['sprint-3', 'tipo: historia', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S3] Integración frontend-backend',
+                    body: `## Tarea técnica\nAsegurar que el frontend consuma correctamente las APIs del backend.\n\n## Criterios de aceptación\n- [ ] Contratos API documentados.\n- [ ] Endpoints funcionales y validados.\n- [ ] Manejo de errores implementado.\n- [ ] Flujo de usuario end-to-end funcional.\n\n**Sprint:** Sprint 3 – Desarrollo del MVP`,
+                    labels: ['sprint-3', 'tipo: tarea', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S3] Revisión de seguridad y validaciones básicas',
+                    body: `## Tarea técnica\nRevisar y fortalecer las validaciones de entrada y controles de acceso básicos.\n\n## Criterios de aceptación\n- [ ] Inputs validados en frontend y backend.\n- [ ] Autenticación básica implementada.\n- [ ] Sin vulnerabilidades críticas identificadas.\n\n**Sprint:** Sprint 3 – Desarrollo del MVP`,
+                    labels: ['sprint-3', 'tipo: tarea', 'prioridad: media'],
+                  },
+                ],
+              },
+              {
+                sprint: 'sprint-4',
+                issues: [
+                  {
+                    title: '[S4] Pruebas funcionales y corrección de bugs',
+                    body: `## Tarea de calidad\nRealizar pruebas funcionales completas sobre el MVP y corregir los bugs encontrados.\n\n## Criterios de aceptación\n- [ ] Plan de pruebas ejecutado.\n- [ ] Bugs críticos y altos corregidos.\n- [ ] Reporte de pruebas documentado.\n\n**Sprint:** Sprint 4 – Validación y Entrega`,
+                    labels: ['sprint-4', 'tipo: tarea', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S4] Documentación final bajo normas APA (7ª edición)',
+                    body: `## Tarea de documentación\nConsolidar toda la documentación del proyecto en un documento académico bajo normas APA 7ª edición.\n\n## Criterios de aceptación\n- [ ] Los 7 entregables incluidos en el documento.\n- [ ] Referencias bibliográficas en formato APA.\n- [ ] Portada, tabla de contenido, conclusiones y bibliografía presentes.\n- [ ] Revisión ortográfica y de estilo completada.\n\n**Sprint:** Sprint 4 – Validación y Entrega`,
+                    labels: ['sprint-4', 'tipo: documentación', 'prioridad: alta'],
+                  },
+                  {
+                    title: '[S4] Presentación final del producto',
+                    body: `## Historia de usuario\nComo equipo, queremos presentar el producto desarrollado con toda la evidencia requerida.\n\n## Criterios de aceptación\n- [ ] Demo funcional del MVP preparada.\n- [ ] Presentación (slides) con los 7 entregables cubiertos.\n- [ ] Tablero GitHub Projects actualizado y visible.\n- [ ] Repositorio limpio, con commits organizados y README actualizado.\n\n**Sprint:** Sprint 4 – Validación y Entrega`,
+                    labels: ['sprint-4', 'tipo: historia', 'prioridad: alta'],
+                  },
+                ],
+              },
+            ];
+
+            const createdIssueNumbers = [];
+
+            for (const sprintData of sprints) {
+              for (const issue of sprintData.issues) {
+                const created = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: issue.title,
+                  body: issue.body,
+                  labels: issue.labels,
+                });
+                console.log(`Issue creado: #${created.data.number} – ${issue.title}`);
+                createdIssueNumbers.push(created.data.number);
+              }
+            }
+
+            core.setOutput('issue_ids', createdIssueNumbers.join(','));
+
+  add-to-project:
+    name: Agregar issues al GitHub Project
+    runs-on: ubuntu-latest
+    needs: create-issues
+    steps:
+      - name: Agregar issues al proyecto por número
+        uses: actions/github-script@v7
+        env:
+          PROJECT_NUMBER: ${{ inputs.project_number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const projectNumber = parseInt(process.env.PROJECT_NUMBER);
+            const issueNumbers = '${{ needs.create-issues.outputs.issue_ids }}'.split(',').map(Number);
+
+            // Obtener el ID del proyecto via GraphQL
+            const projectQuery = await github.graphql(`
+              query($owner: String!, $number: Int!) {
+                user(login: $owner) {
+                  projectV2(number: $number) {
+                    id
+                    title
+                  }
+                }
+              }
+            `, {
+              owner: context.repo.owner,
+              number: projectNumber,
+            });
+
+            const projectId = projectQuery.user.projectV2.id;
+            console.log(`Proyecto encontrado: ${projectQuery.user.projectV2.title} (ID: ${projectId})`);
+
+            // Obtener node_id de cada issue y agregarlo al proyecto
+            for (const issueNumber of issueNumbers) {
+              const issueData = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+              });
+
+              await github.graphql(`
+                mutation($projectId: ID!, $contentId: ID!) {
+                  addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) {
+                    item { id }
+                  }
+                }
+              `, {
+                projectId: projectId,
+                contentId: issueData.data.node_id,
+              });
+
+              console.log(`Issue #${issueNumber} agregado al proyecto.`);
+            }
+
+            console.log('✅ Todos los issues fueron agregados al tablero del proyecto.');
