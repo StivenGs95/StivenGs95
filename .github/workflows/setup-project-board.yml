@@ -119,7 +119,7 @@ jobs:
                 issues: [
                   {
                     title: '[S2] Mapa de stakeholders',
-                    body: `## Tarea de análisis\nIdentificar y clasificar todos los stakeholders del proyecto según su influencia e interés.\n\n## Criterios de aceptación\n- [ ] Matriz de stakeholders (poder vs. interés) elaborada.\n- [ ] Al menos 5 stakeholders identificados con su rol.\n- [ ] Estrategia de comunicación por stakeholder definida.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
+                    body: `## Tarea de documentación\nIdentificar y clasificar todos los stakeholders del proyecto según su influencia e interés.\n\n## Criterios de aceptación\n- [ ] Matriz de stakeholders (poder vs. interés) elaborada.\n- [ ] Al menos 5 stakeholders identificados con su rol.\n- [ ] Estrategia de comunicación por stakeholder definida.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
                     labels: ['sprint-2', 'tipo: documentación', 'prioridad: media'],
                   },
                   {
@@ -139,7 +139,7 @@ jobs:
                   },
                   {
                     title: '[S2] Diagrama de flujo de la solución web',
-                    body: `## Tarea de diseño\nElaborar el diagrama de flujo que represente el funcionamiento de la solución web.\n\n## Criterios de aceptación\n- [ ] Diagrama de flujo con todos los procesos principales del sistema.\n- [ ] Incluye decisiones, entradas y salidas.\n- [ ] Herramienta utilizada (draw.io, Lucidchart, etc.) documentada.\n- [ ] Exportado en alta resolución e incluido en el ERS.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
+                    body: `## Tarea técnica\nElaborar el diagrama de flujo que represente el funcionamiento de la solución web.\n\n## Criterios de aceptación\n- [ ] Diagrama de flujo con todos los procesos principales del sistema.\n- [ ] Incluye decisiones, entradas y salidas.\n- [ ] Herramienta utilizada (draw.io, Lucidchart, etc.) documentada.\n- [ ] Exportado en alta resolución e incluido en el ERS.\n\n**Sprint:** Sprint 2 – Definición y Planificación`,
                     labels: ['sprint-2', 'tipo: tarea', 'prioridad: media'],
                   },
                 ],
