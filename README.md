@@ -120,6 +120,20 @@ Elevar el estandar de desarrollo del equipo:
 
 ---
 
+## ComuniApp – Sprint 1
+
+Proyecto en desarrollo activo. Consulta la documentación del sprint para más detalles.
+
+| Documento | Descripción |
+|-----------|-------------|
+| [Sprint 1 – ComuniApp](docs/sprint-1-comuniapp.md) | Desglose de tareas, objetivos y mapeo al Project #5 |
+| [Base de Datos](docs/database.md) | Diseño inicial de tablas `users` y `login_logs` |
+| [Pruebas de Autenticación](docs/tests-auth.md) | Casos de prueba manuales para el flujo de login |
+
+**Project (tablero de sprint):** [github.com/users/StivenGs95/projects/5](https://github.com/users/StivenGs95/projects/5)
+
+---
+
 ## Contacto y colaboracion
 
 Siempre abierto a colaborar en proyectos donde se valore:
