@@ -120,6 +120,21 @@ Elevar el estandar de desarrollo del equipo:
 
 ---
 
+## ComuniApp – Sprint 1
+
+El Project **ComuniApp** (`projects/5`) es el tablero oficial del Sprint 1 del proyecto ComuniApp, usado desde el repositorio `StivenGs95/StivenGs95` como entorno de prueba.
+
+- **Tablero del proyecto:** [github.com/users/StivenGs95/projects/5](https://github.com/users/StivenGs95/projects/5)
+- **Guía completa del Sprint 1:** [`docs/project-comuniapp-sprint1.md`](docs/project-comuniapp-sprint1.md)
+
+La guía documenta:
+- Las vistas del Project (Prioritized backlog, Status board, Current iteration, Roadmap) y cómo usarlas durante el sprint.
+- Los 15 items del Sprint 1 desglosados (Configuración inicial, Autenticación, Vista principal, Pruebas) con título, descripción y estado inicial recomendado (`Todo`).
+- El flujo de trabajo: cómo mover tarjetas de `Todo` → `In progress` → `Done`.
+- Los pasos para configurar iteraciones y la vista Roadmap.
+
+---
+
 ## Contacto y colaboracion
 
 Siempre abierto a colaborar en proyectos donde se valore:
